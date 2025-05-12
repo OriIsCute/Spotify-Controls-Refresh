@@ -1,0 +1,385 @@
+/**
+ * Spotify Player for Discord
+ * Enhanced visual integration with dynamic background effects
+ */
+
+/* Main player container with positioning and styling */
+#vc-spotify-player {
+  --blur-amount: 2px;
+  --normal-bg-colour: var(--bg-overlay-floating, var(--background-base-low, var(--background-secondary-alt)));
+  position: relative;
+  background: linear-gradient(to bottom, transparent 0%, var(--normal-bg-colour) 100%) !important;
+  overflow: hidden;
+  transition: all 0.4s ease-out;
+  width: 95%;
+  max-width: 100%;
+  /* Center positioning */
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  /* Rounded top corners, square bottom corners */
+  border-radius: 8px 8px 8px 8px !important;
+  /* Add bottom padding */
+  padding-bottom: 20px;
+  /*Bottoms :3*/
+  border-bottom: 1.4mm solid transparent;
+  /* Fade in animation */
+  animation: fadeIn 0.6s ease-out forwards;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure player content stays above background effects */
+#vc-spotify-player > * {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.3));
+}
+
+/* Hover state for player container */
+#vc-spotify-player:hover {
+  --blur-amount: 0px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transform: translateX(-50%);
+  transition: all 0.3s ease;
+}
+
+/* Background layers for visual effects */
+#vc-spotify-player::before,
+#vc-spotify-player::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  transition: all 0.4s ease-out;
+}
+
+/* Album art background layer */
+#vc-spotify-player::before {
+  background: var(--vc-spotify-track-image);
+  background-position: 0% 50%;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  margin: 0 auto;
+  opacity: 0.65;
+  border-radius: 8px 8px 8px 8px !important;
+}
+
+/* Hover effect for album art */
+#vc-spotify-player:hover::before {
+  opacity: 0.8;
+}
+
+/* Gradient overlay with blur effect */
+#vc-spotify-player::after {
+  backdrop-filter: blur(var(--blur-amount)) brightness(1.15);
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.2) 60%, rgba(0, 0, 0, 0.5) 90%, rgba(0, 0, 0, 0.8) 100%);
+}
+
+/* Progress bar fill styling */
+#vc-spotify-progress-bar > [class^="slider_"] > [class^="bar_"] > [class^="barFill_"] {
+  background-color: white !important;
+  background: var(--vc-spotify-track-image);
+  background-size: 1px 100%;
+}
+
+/* Progress bar fill effect */
+#vc-spotify-progress-bar > [class^="slider_"] > [class^="bar_"] > [class^="barFill_"]::before {
+  content: "";
+  position: fixed;
+  top: inherit;
+  left: inherit;
+  width: inherit;
+  height: inherit;
+  border-radius: 4px 0 0 4px;
+  backdrop-filter: blur(10px) saturate(4) brightness(1.8);
+}
+
+/* Base button styling */
+#vc-spotify-player button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Button hover state */
+#vc-spotify-player button:hover {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.4) 100%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Button active/pressed state */
+#vc-spotify-player button:active {
+  transform: scale(0.95);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.15) 100%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Button icon styling */
+#vc-spotify-player button svg,
+#vc-spotify-player button img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3)) brightness(1.3);
+}
+
+/* Button icon hover effect */
+#vc-spotify-player button:hover svg,
+#vc-spotify-player button:hover img {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)) brightness(1.5);
+}
+
+/* Button click ripple effect */
+#vc-spotify-player button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Button active ripple animation */
+#vc-spotify-player button:active::after {
+  opacity: 0.2;
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* Play/Pause button specific styling */
+#vc-spotify-player [class*="buttonPlay"],
+#vc-spotify-player [class*="buttonPause"] {
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(3px);
+}
+
+/* Play/Pause button hover effects */
+#vc-spotify-player [class*="buttonPlay"]:hover,
+#vc-spotify-player [class*="buttonPause"]:hover {
+  transform: scale(1.2);
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+              0 0 40px rgba(255, 255, 255, 0.2);
+}
+
+/* Play/Pause button active state */
+#vc-spotify-player [class*="buttonPlay"]:active,
+#vc-spotify-player [class*="buttonPause"]:active {
+  transform: scale(0.85);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Previous/Next button styling */
+#vc-spotify-player [class*="buttonPrev"],
+#vc-spotify-player [class*="buttonNext"] {
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Previous/Next button hover effects */
+#vc-spotify-player [class*="buttonPrev"]:hover,
+#vc-spotify-player [class*="buttonNext"]:hover {
+  transform: scale(1.15);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Previous/Next button active state */
+#vc-spotify-player [class*="buttonPrev"]:active,
+#vc-spotify-player [class*="buttonNext"]:active {
+  transform: scale(0.9);
+}
+
+/* Shuffle/Repeat button styling */
+#vc-spotify-player [class*="buttonShuffle"],
+#vc-spotify-player [class*="buttonRepeat"] {
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Shuffle/Repeat button hover effects */
+#vc-spotify-player [class*="buttonShuffle"]:hover,
+#vc-spotify-player [class*="buttonRepeat"]:hover {
+  transform: scale(1.15);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Active state for Shuffle/Repeat buttons */
+#vc-spotify-player [class*="buttonShuffle"].active,
+#vc-spotify-player [class*="buttonRepeat"].active {
+  background: rgba(255, 255, 255, 0.3);
+  animation: activeButtonPulse 2s infinite;
+}
+
+/* Volume slider styling */
+#vc-spotify-player [class*="volumeSlider"] {
+  transition: all 0.3s ease;
+}
+
+/* Volume slider hover effect */
+#vc-spotify-player [class*="volumeSlider"]:hover {
+  transform: scaleY(1.1);
+}
+
+/* Animation for active buttons */
+@keyframes activeButtonPulse {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    filter: brightness(1.1);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    filter: brightness(1.3);
+  }
+}
+
+/* Background panning animation */
+@keyframes backgroundPan {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Button ripple animation */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  20% {
+    transform: scale(25);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(40);
+    opacity: 0;
+  }
+}
+
+/* Brightness pulse animation */
+@keyframes pulse {
+  0% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.3);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+/* Fade in animation for player */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Listening Along container styling */
+.listeningAlong_e0cf27 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--background-primary);
+  padding: 8px 15px;
+  border-radius: 8px;
+  box-shadow: none;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+/* Title text styling */
+.text-sm\/medium_cf4812.title_b6c092 {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--text-normal);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Subtitle text styling */
+.text-xs\/normal_cf4812.subtext339d0 {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Avatar container styling */
+.avatar_e0cf27 {
+  display: flex;
+  gap: 8px;
+}
+
+/* Individual avatar styling */
+.avatar_e0cf27 .wrapper44b0c {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+/* Avatar hover effect */
+.avatar_e0cf27 .wrapper__44b0c:hover {
+  transform: scale(1.1);
+}
+
+/* Icons container styling */
+.icons_e0cf27 {
+  margin-left: 10px;
+}
+
+/* Bottom border effect for listening along container */
+.listeningAlong_e0cf27::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+/* Activity panel styling */
+.panel__5dec7.activityPanel_c48ade {
+  background: var(--background-primary);
+  border-radius: 8px;
+  padding: 8px 15px;
+  box-shadow: none;
+  border: none;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+}
