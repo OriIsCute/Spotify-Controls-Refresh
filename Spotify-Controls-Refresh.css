@@ -58,22 +58,14 @@
   background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
 }
 
-/* Progress bar styling */
+/* Progress bar styling - Simple solid white */
 #vc-spotify-progress-bar > [class^="slider_"] > [class^="bar_"] > [class^="barFill_"] {
-  background-color: white !important;
-  background: var(--vc-spotify-track-image);
-  background-size: 1px 100%;
+  background: #ffffff !important;
 }
 
-#vc-spotify-progress-bar > [class^="slider_"] > [class^="bar_"] > [class^="barFill_"]::before {
-  content: "";
-  position: fixed;
-  top: inherit;
-  left: inherit;
-  width: inherit;
-  height: inherit;
-  border-radius: 4px 0 0 4px;
-  backdrop-filter: blur(10px) saturate(4) brightness(1.8);
+/* Progress bar track */
+#vc-spotify-progress-bar > [class^="slider_"] > [class^="bar_"] {
+  background: rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Button base styles */
